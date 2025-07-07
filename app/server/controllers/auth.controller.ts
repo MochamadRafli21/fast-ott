@@ -1,17 +1,28 @@
 import type { Request, Response } from "express";
+import {
+  registerSchema,
+  loginSchema,
+  type RegisterInput,
+  type LoginInput,
+  type AuthResponse,
+} from "@ott/types";
 import { PrismaClient } from "@prisma/client";
 import { hashPassword, comparePassword, signToken } from "@/middleware/auth";
 
 const prisma = new PrismaClient();
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response<AuthResponse>) => {
   try {
-    const { email, password, role } = req.body;
+    const parsed = registerSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() } as any);
+    }
+
+    const { email, password, role }: RegisterInput = parsed.data;
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      res.status(400).json({ error: "Email already exists" });
-      return;
+      return res.status(400).json({ error: "Email already exists" } as any);
     }
 
     const hashed = await hashPassword(password);
@@ -35,24 +46,27 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.error("Register error:", err);
-    res.status(500).json({ error: "Register failed" });
+    return res.status(500).json({ error: "Register failed" } as any);
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response<AuthResponse>) => {
   try {
-    const { email, password } = req.body;
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.flatten() } as any);
+    }
+
+    const { email, password }: LoginInput = parsed.data;
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      res.status(400).json({ error: "Invalid credentials" });
-      return;
+      return res.status(400).json({ error: "Invalid credentials" } as any);
     }
 
     const valid = await comparePassword(password, user.password);
     if (!valid) {
-      res.status(400).json({ error: "Invalid credentials" });
-      return;
+      return res.status(400).json({ error: "Invalid credentials" } as any);
     }
 
     const token = signToken({
@@ -67,11 +81,11 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ error: "Login failed" });
+    return res.status(500).json({ error: "Login failed" } as any);
   }
 };
 
 export const getMe = (req: Request, res: Response) => {
-  const user = req.user;
+  const user = req.user; // assumed to be set by requireAuth middleware
   res.json({ user });
 };
