@@ -72,6 +72,6 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const getMe = (req: Request, res: Response) => {
-  const user = (req as any).user;
+  const user = req.user;
   res.json({ user });
 };

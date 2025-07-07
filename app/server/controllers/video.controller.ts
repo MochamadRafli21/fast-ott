@@ -1,36 +1,41 @@
 import type { Request, Response } from "express";
+import {
+  createVideoSchema,
+  updateVideoSchema,
+  type CreateVideoInput,
+} from "@ott/types";
 import { PrismaClient } from "@prisma/client";
 import { getRoles } from "@/lib/auth";
 import { Role, VIDEO_STATUS } from "@/generated/prisma";
-import {
-  uploadImageToCloudinary,
-  uploadVideoToCloudinary,
-} from "@/lib/cloudinary";
 
 const prisma = new PrismaClient();
 
-export async function uploadVideo(req: Request, res: Response) {
-  const { title } = req.body;
-  const videoFile = req.files?.video?.[0];
-  const thumbnailFile = req.files?.thumbnail?.[0];
-
-  if (!videoFile || !thumbnailFile) {
-    res.status(400).json({ error: "Video and thumbnail required" });
+export async function createVideo(req: Request, res: Response) {
+  const parse = createVideoSchema.safeParse(req.body);
+  if (!parse.success) {
+    res.status(400).json({ error: parse.error.flatten() });
     return;
   }
 
-  const thumbRes = await uploadImageToCloudinary(
-    thumbnailFile.buffer,
-    "thumbnails",
-  );
-  const videoRes = await uploadVideoToCloudinary(videoFile.buffer, "videos");
+  const data: CreateVideoInput = parse.data;
 
   const video = await prisma.video.create({
-    data: {
-      title,
-      url: videoRes.secure_url,
-      thumbnail: thumbRes.secure_url,
-    },
+    data,
+  });
+
+  res.status(201).json(video);
+}
+
+export async function updateVideo(req: Request, res: Response) {
+  const parse = updateVideoSchema.safeParse(req.body);
+  if (!parse.success) {
+    res.status(400).json({ error: parse.error.flatten() });
+    return;
+  }
+
+  const video = await prisma.video.update({
+    where: { id: req.params.id },
+    data: parse.data,
   });
 
   res.json(video);

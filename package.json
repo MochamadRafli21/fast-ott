@@ -2,8 +2,13 @@
   "name": "fast-ott",
   "module": "index.ts",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "private": true,
   "devDependencies": {
+    "@ott/types": "workspace:*",
     "@types/bun": "latest"
   },
   "peerDependencies": {

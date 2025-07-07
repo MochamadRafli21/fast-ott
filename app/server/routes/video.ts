@@ -1,8 +1,8 @@
 import express from "express";
 import { requireAuth } from "@/middleware/auth";
-import { upload } from "@/middleware/multer"; // config with multer.fields
 import {
-  uploadVideo,
+  createVideo,
+  updateVideo,
   listVideos,
   getVideo,
   deleteVideo,
@@ -10,16 +10,8 @@ import {
 
 const router = express.Router();
 
-router.post(
-  "/",
-  requireAuth(["ADMIN"]),
-  upload.fields([
-    { name: "video", maxCount: 1 },
-    { name: "thumbnail", maxCount: 1 },
-  ]),
-  uploadVideo,
-);
-
+router.post("/", requireAuth(["ADMIN"]), createVideo);
+router.put("/:id", requireAuth(["ADMIN"]), updateVideo);
 router.get("/", listVideos);
 router.get("/:id", getVideo);
 router.delete("/:id", requireAuth(["ADMIN"]), deleteVideo);

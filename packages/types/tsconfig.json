@@ -23,10 +23,6 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-
-    "paths": {
-      "@ott/types/*": ["./packages/types/*"]
-    }
+    "noPropertyAccessFromIndexSignature": false
   }
 }
