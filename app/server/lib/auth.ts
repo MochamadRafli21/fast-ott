@@ -1,6 +1,13 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import type { Request, Response, NextFunction } from "express";
+import type { Role } from "../generated/prisma";
+
+export type TokenPayload = {
+  id: string;
+  email: string;
+  role: Role;
+};
 
 export const hashPassword = async (password: string) =>
   await bcrypt.hash(password, 10);
@@ -19,7 +26,10 @@ export const requireAuth =
 
     try {
       if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+        const decoded = jwt.verify(
+          token,
+          process.env.JWT_SECRET!,
+        ) as TokenPayload;
         if (roles.length && !roles.includes(decoded.role)) {
           res.status(403).json({ error: "Forbidden" });
         }
@@ -30,3 +40,15 @@ export const requireAuth =
       res.status(401).json({ error: "Invalid token" });
     }
   };
+
+export const getRoles = (req: Request): undefined | Role => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload;
+    return decoded.role;
+  } catch {
+    return;
+  }
+};

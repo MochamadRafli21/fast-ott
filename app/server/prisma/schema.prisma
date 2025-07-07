@@ -21,3 +21,18 @@ enum Role {
   USER
   ADMIN
 }
+
+model Video {
+  id           String       @id @default(uuid())
+  title        String
+  descriptions String
+  url          String
+  status       VIDEO_STATUS
+  thumbnail    String
+  createdAt    DateTime     @default(now())
+}
+
+enum VIDEO_STATUS {
+  DRAFT
+  PUBLISH
+}

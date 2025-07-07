@@ -10,7 +10,6 @@ import {
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// POST /api/auth/register
 router.post("/register", async (req, res) => {
   const { email, password, role } = req.body;
   try {
@@ -40,7 +39,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// POST /api/auth/login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -64,7 +62,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// GET /api/auth/me (Protected)
 router.get("/me", requireAuth(), async (req, res) => {
   const user = (req as any).user;
   res.json({ user });
