@@ -1,12 +1,14 @@
 import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth";
 
+dotenv.config();
 const app = express();
-const port = 8080;
 
-app.get("/", (_req, res) => {
-  res.send("Hello World!");
-});
+app.use(cors());
+app.use(express.json());
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
-});
+app.use("/api/auth", authRoutes);
+
+app.listen(3001, () => console.log("API running on :3001"));
