@@ -1,5 +1,5 @@
 FROM oven/bun:1 as base
-WORKDIR /
+WORKDIR /app
 
 # Install OpenSSL 3.0 and other system dependencies
 RUN apt-get update && apt-get install -y \
@@ -12,21 +12,26 @@ RUN apt-get update && apt-get install -y \
   g++ \
   && rm -rf /var/lib/apt/lists/*
 
-# Copy package files
+# Copy root package.json and workspace configuration first
 COPY package*.json bun.lockb* ./
-COPY app/server/package*.json app/server/bun.lockb* ./app/server/
+COPY tsconfig*.json ./
 
-# Install dependencies
+# Copy all workspace package.json files to establish the workspace structure
+COPY packages/types/package*.json ./packages/types/
+COPY app/server/package*.json ./app/server/
+
+# Install all dependencies (this will resolve workspace dependencies)
 RUN bun install
 
-# Copy source code
-COPY . .
+# Copy all source code
+COPY packages/ ./packages/
+COPY app/ ./app/
 
-# Generate Prisma client with correct binary target
+# Generate Prisma client
 RUN cd app/server && bun prisma generate
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the application
 CMD ["bun", "--cwd", "app/server", "dev"]
