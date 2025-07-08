@@ -1,0 +1,13 @@
+[phases.install]
+dependsOn = ["setup"]
+cmds = ["bun install"]
+
+[phases.setup]
+nixPkgs = ["openssl", "openssl.dev", "pkg-config"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["cd app/server && bun prisma generate"]
+
+[start]
+cmd = "bun --cwd app/server dev"
