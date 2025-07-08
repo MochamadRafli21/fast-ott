@@ -6,7 +6,7 @@ import {
 } from "@ott/types";
 import { PrismaClient } from "@prisma/client";
 import { getRoles } from "@/lib/auth";
-import { Role, VIDEO_STATUS } from "@/generated/prisma";
+import { Role, VIDEO_STATUS } from "@prisma/client";
 
 const prisma = new PrismaClient();
 

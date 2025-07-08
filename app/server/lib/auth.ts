@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { Request } from "express";
-import type { Role } from "@/generated/prisma";
+import type { Role } from "@prisma/client";
 
 export type TokenPayload = {
   id: string;
