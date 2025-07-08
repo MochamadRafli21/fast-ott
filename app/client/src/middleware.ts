@@ -9,7 +9,6 @@ export function middleware(req: NextRequest) {
     req.headers.get("authorization")?.replace("Bearer ", "");
 
   const isPublic = PUBLIC_ROUTES.includes(req.nextUrl.pathname);
-
   if (!token && !isPublic) {
     return NextResponse.redirect(new URL("auth/login", req.url));
   }
@@ -18,5 +17,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*"], // secure these
+  matcher: ["/", "/dashboard/:path*", "/admin/:path*"], // secure these
 };

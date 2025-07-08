@@ -15,14 +15,16 @@ export const register = async (req: Request, res: Response<AuthResponse>) => {
   try {
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ error: parsed.error.flatten() } as any);
+      res.status(400).json({ error: parsed.error.flatten() } as any);
+      return;
     }
 
     const { email, password, role }: RegisterInput = parsed.data;
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
-      return res.status(400).json({ error: "Email already exists" } as any);
+      res.status(400).json({ error: "Email already exists" } as any);
+      return;
     }
 
     const hashed = await hashPassword(password);
@@ -46,7 +48,7 @@ export const register = async (req: Request, res: Response<AuthResponse>) => {
     });
   } catch (err) {
     console.error("Register error:", err);
-    return res.status(500).json({ error: "Register failed" } as any);
+    res.status(500).json({ error: "Register failed" } as any);
   }
 };
 
@@ -54,19 +56,22 @@ export const login = async (req: Request, res: Response<AuthResponse>) => {
   try {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ error: parsed.error.flatten() } as any);
+      res.status(400).json({ error: parsed.error.flatten() } as any);
+      return;
     }
 
     const { email, password }: LoginInput = parsed.data;
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" } as any);
+      res.status(400).json({ error: "Invalid credentials" } as any);
+      return;
     }
 
     const valid = await comparePassword(password, user.password);
     if (!valid) {
-      return res.status(400).json({ error: "Invalid credentials" } as any);
+      res.status(400).json({ error: "Invalid credentials" } as any);
+      return;
     }
 
     const token = signToken({
@@ -81,7 +86,7 @@ export const login = async (req: Request, res: Response<AuthResponse>) => {
     });
   } catch (err) {
     console.error("Login error:", err);
-    return res.status(500).json({ error: "Login failed" } as any);
+    res.status(500).json({ error: "Login failed" } as any);
   }
 };
 

@@ -16,9 +16,7 @@ export const loginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
-export const registerSchema = loginSchema.extend({
-  role: userRoleEnum.optional(),
-});
+export const registerSchema = loginSchema;
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export const authResponseSchema = z.object({
