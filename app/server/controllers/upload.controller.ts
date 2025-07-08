@@ -6,11 +6,11 @@ import {
 
 export async function uploadThumbnail(req: Request, res: Response) {
   const file = req.files?.thumbnail?.[0];
+
   if (!file) {
     res.status(400).json({ error: "Thumbnail file required" });
     return;
   }
-
   const result = await uploadImageToCloudinary(file.buffer, "thumbnails");
   res.json({ url: result.secure_url });
 }
@@ -21,7 +21,11 @@ export async function uploadVideoFile(req: Request, res: Response) {
     res.status(400).json({ error: "Video file required" });
     return;
   }
-
-  const result = await uploadVideoToCloudinary(file.buffer, "videos");
-  res.json({ url: result.secure_url });
+  try {
+    const result = await uploadVideoToCloudinary(file.buffer, "videos");
+    res.json({ url: result.secure_url });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: "Failed to upload video" });
+  }
 }

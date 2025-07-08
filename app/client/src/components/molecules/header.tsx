@@ -22,7 +22,7 @@ export function Header() {
               </span>
 
               {user?.role === "ADMIN" ? (
-                <Link href="/admin/videos">
+                <Link href="/admin">
                   <Button variant="outline" size="sm">
                     Admin Panel
                   </Button>

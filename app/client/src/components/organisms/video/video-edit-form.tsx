@@ -47,13 +47,13 @@ export default function EditVideoForm() {
 
   const uploadToCloudinary = async (
     file: File,
+    type: "thumbnail" | "url",
     endpoint: string,
   ): Promise<string> => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append(type === "thumbnail" ? "thumbnail" : "video", file);
     const res = await fetch(endpoint, {
       method: "POST",
-
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -61,7 +61,7 @@ export default function EditVideoForm() {
     });
     if (!res.ok) throw new Error("Upload failed");
     const data = await res.json();
-    return data.secure_url;
+    return data.url;
   };
 
   const handleFileUpload = async (
@@ -74,7 +74,7 @@ export default function EditVideoForm() {
     try {
       const endpoint =
         field === "thumbnail" ? "/api/upload/thumbnail" : "/api/upload/video";
-      const secure_url = await uploadToCloudinary(file, endpoint);
+      const secure_url = await uploadToCloudinary(file, field, endpoint);
       form.setValue(field, secure_url, { shouldValidate: true });
     } catch (err) {
       console.error(err);
@@ -102,7 +102,7 @@ export default function EditVideoForm() {
         throw new Error(error ?? "Failed to update video");
       }
 
-      router.push("/admin/videos");
+      router.push("/admin");
     } catch (err) {
       setError((err as Error).message);
     }
