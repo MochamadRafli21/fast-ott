@@ -10,6 +10,7 @@ import { useRouter, useParams } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/providers/auth-provider";
 import { VIDEO_URL } from "@/constants/api/video";
+import { UPLOAD_THUMBNAIL_URL, UPLOAD_VIDEO_URL } from "@/constants/api/upload";
 
 export default function EditVideoForm() {
   const { token } = useAuth();
@@ -73,7 +74,7 @@ export default function EditVideoForm() {
     setUploading(true);
     try {
       const endpoint =
-        field === "thumbnail" ? "/api/upload/thumbnail" : "/api/upload/video";
+        field === "thumbnail" ? UPLOAD_THUMBNAIL_URL : UPLOAD_VIDEO_URL;
       const secure_url = await uploadToCloudinary(file, field, endpoint);
       form.setValue(field, secure_url, { shouldValidate: true });
     } catch (err) {
@@ -87,7 +88,7 @@ export default function EditVideoForm() {
   const onSubmit = async (data: CreateVideoInput) => {
     setError("");
     try {
-      const res = await fetch(`/api/admin/videos/${id}`, {
+      const res = await fetch(`${VIDEO_URL}/${id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,10 +111,7 @@ export default function EditVideoForm() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-6 max-w-xl mx-auto"
-    >
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-xl">
       <div>
         <Label htmlFor="title">Title</Label>
         <Input {...form.register("title")} id="title" />

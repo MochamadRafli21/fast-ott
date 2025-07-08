@@ -23,7 +23,7 @@ export async function createVideo(req: Request, res: Response) {
     data,
   });
 
-  res.status(201).json(video);
+  res.status(200).json(video);
 }
 
 export async function updateVideo(req: Request, res: Response) {
