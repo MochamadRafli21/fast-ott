@@ -1,7 +1,6 @@
 "use client";
 
 import { VideoGrid } from "@/components/organisms/video/video-grid";
-import { Header } from "@/components/molecules/header";
 import { useQuery } from "@tanstack/react-query";
 import { VIDEO_URL } from "@/constants/api/video";
 import { useAuth } from "@/providers/auth-provider";
@@ -22,7 +21,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <Header />
       <div className="container py-10">
         {isLoading ? (
           <p className="text-center text-muted-foreground">Loading...</p>

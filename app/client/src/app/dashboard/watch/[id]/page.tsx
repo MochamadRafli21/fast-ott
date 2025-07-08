@@ -15,7 +15,7 @@ export default function WatchPage() {
   const { data: video, isLoading } = useQuery({
     queryKey: ["video", id],
     queryFn: async () => {
-      const res = await fetch(`${VIDEO_URL}${id}`, {
+      const res = await fetch(`${VIDEO_URL}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -38,7 +38,7 @@ export default function WatchPage() {
 
   return (
     <div className="container py-10 max-w-4xl mx-auto">
-      <Card>
+      <Card className="py-0">
         <div className="aspect-video relative rounded-t-md overflow-hidden">
           <ReactPlayer
             src={video.url}
@@ -48,10 +48,10 @@ export default function WatchPage() {
             style={{ position: "absolute", top: 0, left: 0 }}
           />
         </div>
-        <CardContent className="p-6">
+        <CardContent className="py-2 px-6">
           <h1 className="text-xl font-bold">{video.title}</h1>
-          {video.description && (
-            <p className="text-muted-foreground mt-2">{video.description}</p>
+          {video.descriptions && (
+            <p className="text-muted-foreground mt-2">{video.descriptions}</p>
           )}
         </CardContent>
       </Card>
