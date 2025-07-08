@@ -2,10 +2,15 @@
   "name": "fast-ott",
   "module": "index.ts",
   "type": "module",
-  "workspaces": [
-    "app/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "app/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/client/**"
+    ]
+  },
   "private": true,
   "devDependencies": {
     "concurrently": "^8.2.2",

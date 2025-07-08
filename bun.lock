@@ -19,7 +19,6 @@
       "version": "0.1.0",
       "dependencies": {
         "@hookform/resolvers": "^5.1.1",
-        "@ott/types": "workspace:*",
         "@radix-ui/react-label": "^2.1.7",
         "@radix-ui/react-slot": "^1.2.3",
         "@tanstack/react-query": "^5.81.5",
@@ -75,6 +74,7 @@
         "zod": "^3.25.75",
       },
       "devDependencies": {
+        "@ott/types": "workspace:*",
         "@types/bun": "latest",
         "@types/jsonwebtoken": "^9.0.10",
         "node-gyp": "^10.0.1",
