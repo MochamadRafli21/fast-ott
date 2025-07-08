@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getUserFromToken } from "./lib/auth-client";
+import { decodeToken } from "./lib/auth-client";
 
 const PUBLIC_ROUTES = ["/auth/login", "/auth/register"];
 const ADMIN_ONLY = ["/admin"];
@@ -16,10 +16,12 @@ export function middleware(req: NextRequest) {
   }
 
   //if not admin redirect to dashboard
-  const user = getUserFromToken();
-  const isAdminOnly = ADMIN_ONLY.includes(req.nextUrl.pathname);
-  if (user?.role !== "ADMIN" && isAdminOnly) {
-    return NextResponse.redirect(new URL("dashboard", req.url));
+  if (token) {
+    const user = decodeToken(token);
+    const isAdminOnly = ADMIN_ONLY.includes(req.nextUrl.pathname);
+    if (user?.role !== "ADMIN" && isAdminOnly) {
+      return NextResponse.redirect(new URL("dashboard", req.url));
+    }
   }
 
   return NextResponse.next();

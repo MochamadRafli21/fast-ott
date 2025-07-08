@@ -4,14 +4,18 @@ export type DecodedUser = {
   role: "USER" | "ADMIN";
 };
 
+export function decodeToken(token: string) {
+  const [, payloadBase64] = token.split(".");
+  const payloadJson = atob(payloadBase64);
+  return JSON.parse(payloadJson) as DecodedUser;
+}
+
 export function getUserFromToken(): DecodedUser | null {
   const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
   if (!token) return null;
 
   try {
-    const [, payloadBase64] = token.split(".");
-    const payloadJson = atob(payloadBase64);
-    return JSON.parse(payloadJson) as DecodedUser;
+    return decodeToken(token);
   } catch {
     return null;
   }
