@@ -18,7 +18,7 @@ export default function AdminVideoPage() {
   const queryClient = useQueryClient();
 
   const { data: videos = [], isLoading } = useQuery<AdminVideo[]>({
-    queryKey: ["admin-videos"],
+    queryKey: ["videos"],
     queryFn: async () => {
       const res = await fetch(VIDEO_URL, {
         headers: {
@@ -42,7 +42,7 @@ export default function AdminVideoPage() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-videos"] });
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
     },
     onError: () => console.error("Failed to find video"),
   });

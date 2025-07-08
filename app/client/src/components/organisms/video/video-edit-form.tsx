@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter, useParams } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/providers/auth-provider";
 import { VIDEO_URL } from "@/constants/api/video";
@@ -14,6 +15,7 @@ import { UPLOAD_THUMBNAIL_URL, UPLOAD_VIDEO_URL } from "@/constants/api/upload";
 
 export default function EditVideoForm() {
   const { token } = useAuth();
+  const queryClient = useQueryClient();
 
   const router = useRouter();
   const { id } = useParams();
@@ -85,9 +87,8 @@ export default function EditVideoForm() {
     }
   };
 
-  const onSubmit = async (data: CreateVideoInput) => {
-    setError("");
-    try {
+  const editMutations = useMutation({
+    mutationFn: async (data: CreateVideoInput) => {
       const res = await fetch(`${VIDEO_URL}/${id}`, {
         method: "PUT",
         headers: {
@@ -101,11 +102,20 @@ export default function EditVideoForm() {
         const { error } = await res.json();
         throw new Error(error ?? "Failed to update video");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
 
       router.push("/admin");
-    } catch (err) {
+    },
+    onError: (err) => {
       setError((err as Error).message);
-    }
+    },
+  });
+
+  const onSubmit = async (data: CreateVideoInput) => {
+    setError("");
+    editMutations.mutate(data);
   };
 
   if (loading) return <p>Loading...</p>;

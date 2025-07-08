@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UPLOAD_VIDEO_URL, UPLOAD_THUMBNAIL_URL } from "@/constants/api/upload";
 import { VIDEO_URL } from "@/constants/api/video";
 import { useAuth } from "@/providers/auth-provider";
 
 export default function AddVideoForm() {
   const { token } = useAuth();
+  const queryClient = useQueryClient();
 
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
@@ -61,8 +63,8 @@ export default function AddVideoForm() {
     }
   };
 
-  const onSubmit = async (data: CreateVideoInput) => {
-    try {
+  const addMutations = useMutation({
+    mutationFn: async (data: CreateVideoInput) => {
       const res = await fetch(VIDEO_URL, {
         method: "POST",
         headers: {
@@ -76,11 +78,20 @@ export default function AddVideoForm() {
         const { error } = await res.json();
         throw new Error(error ?? "Submit failed");
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["videos"] });
 
       router.push("/admin");
-    } catch (err) {
+    },
+    onError: (err) => {
       setError((err as Error).message);
-    }
+    },
+  });
+
+  const onSubmit = async (data: CreateVideoInput) => {
+    setError("");
+    addMutations.mutate(data);
   };
 
   return (

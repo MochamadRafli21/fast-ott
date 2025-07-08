@@ -13,7 +13,7 @@ export default function WatchPage() {
   const { id } = useParams<{ id: string }>();
 
   const { data: video, isLoading } = useQuery({
-    queryKey: ["video", id],
+    queryKey: ["videos", id],
     queryFn: async () => {
       const res = await fetch(`${VIDEO_URL}/${id}`, {
         headers: {
