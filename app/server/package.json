@@ -30,6 +30,7 @@
     "zod": "^3.25.75"
   },
   "scripts": {
-    "dev": "bun index.ts"
+    "dev": "bun index.ts",
+    "seed": "bun prisma/seed.ts"
   }
 }
