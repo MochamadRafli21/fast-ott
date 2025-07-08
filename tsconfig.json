@@ -26,7 +26,7 @@
     "noPropertyAccessFromIndexSignature": false,
 
     "paths": {
-      "@ott/types/*": ["./packages/types/*"]
+      "@ott/types": ["./packages/types/*"]
     }
   }
 }

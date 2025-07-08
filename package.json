@@ -3,15 +3,28 @@
   "module": "index.ts",
   "type": "module",
   "workspaces": [
-    "apps/*",
+    "app/*",
     "packages/*"
   ],
   "private": true,
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
     "@ott/types": "workspace:*",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n CLIENT,API -c green,cyan \"bun dev:client\" \"bun dev:server\"",
+    "dev:client": "bun --cwd app/client dev",
+    "dev:server": "bun --cwd app/server dev",
+    "build": "bun run build:client",
+    "build:client": "bun --cwd app/client run build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "format": "prettier --write ."
   }
 }
