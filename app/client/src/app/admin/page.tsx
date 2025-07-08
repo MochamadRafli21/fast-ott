@@ -48,7 +48,7 @@ export default function AdminVideoPage() {
   });
 
   const handleEdit = (id: string) => {
-    router.push(`/admin/videos/${id}`);
+    router.push(`/admin/video/${id}`);
   };
 
   const handleDelete = (id: string) => {

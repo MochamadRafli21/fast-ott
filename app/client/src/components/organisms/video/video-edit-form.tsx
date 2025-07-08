@@ -125,6 +125,43 @@ export default function EditVideoForm() {
         )}
       </div>
 
+      <div className="flex flex-col">
+        <label htmlFor="descriptions">Descriptions</label>
+        <textarea
+          className="px-4 py-2"
+          {...form.register("descriptions")}
+          id="descriptions"
+          placeholder="Video descriptions"
+        />
+        {form.formState.errors.descriptions && (
+          <p className="text-red-500 text-sm mt-1">
+            {form.formState.errors.descriptions.message}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="status"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Status
+        </label>
+        <select
+          id="status"
+          className="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
+          {...form.register("status")}
+        >
+          <option value="DRAFT">Draft</option>
+          <option value="PUBLISH">Publish</option>
+        </select>
+        {form.formState.errors.status && (
+          <p className="text-red-500 text-sm mt-1">
+            {form.formState.errors.status.message}
+          </p>
+        )}
+      </div>
+
       <div>
         <Label>Thumbnail</Label>
         <Input
