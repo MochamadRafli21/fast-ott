@@ -88,8 +88,7 @@ export default function EditVideoForm() {
     setError("");
     try {
       const res = await fetch(`/api/admin/videos/${id}`, {
-        method: "PATCH",
-
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
