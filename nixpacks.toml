@@ -1,9 +1,9 @@
+[phases.setup]
+nixPkgs = ["bun", "openssl", "openssl.dev", "pkg-config"]
+
 [phases.install]
 dependsOn = ["setup"]
 cmds = ["bun install"]
-
-[phases.setup]
-nixPkgs = ["openssl", "openssl.dev", "pkg-config"]
 
 [phases.build]
 dependsOn = ["install"]
