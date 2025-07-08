@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 type AuthContextValue = {
   user: DecodedUser | null;
-  token: String | null;
+  token: string | null;
   isAuthenticated: boolean;
   login: (token: string) => void;
   logout: () => void;
@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<DecodedUser | null>(null);
-  const [token, setToken] = useState<String | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {

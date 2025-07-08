@@ -54,6 +54,7 @@ export default function AddVideoForm() {
       const secure_url = await uploadToCloudinary(file, endpoint);
       form.setValue(field, secure_url, { shouldValidate: true });
     } catch (err) {
+      console.error(err);
       setError("Upload failed");
     } finally {
       setUploading(false);

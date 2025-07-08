@@ -17,7 +17,7 @@ export function getUserFromToken(): DecodedUser | null {
   }
 }
 
-export function getTokenFromCookie(): String | null {
+export function getTokenFromCookie(): string | null {
   const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
   if (!token) return null;
 
