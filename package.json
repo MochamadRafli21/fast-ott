@@ -24,8 +24,8 @@
     "build": "bun run build:client",
     "build:client": "bun --cwd app/client build",
     "typecheck": "tsc --noEmit",
-    "db:push": "bun --cwd apps/server prisma db push",
-    "db:generate": "bun --cwd apps/server prisma generate",
+    "db:push": "bun --cwd app/server prisma db push",
+    "db:generate": "bun --cwd app/server prisma generate",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write ."
   }
