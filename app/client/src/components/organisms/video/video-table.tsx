@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatDistanceToNow } from "date-fns";
 
 export type AdminVideo = {
   id: string;
@@ -25,7 +24,7 @@ type Props = {
 
 export function AdminVideoTable({ videos, onEdit, onDelete }: Props) {
   return (
-    <div className="border rounded-lg overflow-x-auto">
+    <div className="border max-w-[90vw] mx-auto rounded-lg overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
@@ -61,9 +60,7 @@ export function AdminVideoTable({ videos, onEdit, onDelete }: Props) {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {formatDistanceToNow(new Date(video.createdAt), {
-                    addSuffix: true,
-                  })}
+                  {new Date(video.createdAt).toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right space-x-2">
                   <Button

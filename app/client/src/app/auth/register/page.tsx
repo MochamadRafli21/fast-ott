@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/auth-provider";
 import { useState } from "react";
 import { REGISTER } from "@/constants/api";
 
 export default function RegisterPage() {
+  const { login } = useAuth();
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -32,9 +34,8 @@ export default function RegisterPage() {
       }
       const result = await res.json();
 
-      const expires = new Date();
-      expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
-      document.cookie = `token=${result.token}; expires=${expires.toUTCString()}; path=/; SameSite=Strict${process.env.NODE_ENV === "production" ? "; Secure" : ""}`;
+      // update data to context and cookies
+      login(result.token);
 
       return result;
     },

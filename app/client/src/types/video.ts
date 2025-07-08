@@ -1,8 +1,12 @@
 import { z } from "zod";
 
+export const videoStatusEnum = z.enum(["DRAFT", "PUBLISH"]);
+
 export const videoSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(1),
+  descriptions: z.string().min(1),
+  status: videoStatusEnum,
   url: z.string().url(),
   thumbnail: z.string().url(),
   createdAt: z.string(),

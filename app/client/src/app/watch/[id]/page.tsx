@@ -6,14 +6,20 @@ import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { VIDEO_URL } from "@/constants/api/video";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function WatchPage() {
+  const { token } = useAuth();
   const { id } = useParams<{ id: string }>();
 
   const { data: video, isLoading } = useQuery({
     queryKey: ["video", id],
     queryFn: async () => {
-      const res = await fetch(`${VIDEO_URL}${id}`);
+      const res = await fetch(`${VIDEO_URL}${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!res.ok) throw new Error("Video not found");
       return res.json();
     },
